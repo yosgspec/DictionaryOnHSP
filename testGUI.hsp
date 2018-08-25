@@ -1,0 +1,103 @@
+#include "Dictionary.as"
+
+#module Program
+	#deffunc newForm
+		screen 0,380,240,0
+		cls 1
+		title "DictiaryPreview"
+		objmode 2
+		
+		pos 10,0: mes "Key"
+		pos 10,20
+		key_txt=""
+		input key_txt,120,30
+		objsize 120,30
+		pos 10,50
+		button gosub "SetItem",*setItem_btn
+
+		pos 10,80: mes "Keys"
+		pos 10,100
+		sdim keys_txt
+		mesbox keys_txt,120,130,1
+		keys_id=stat
+
+		pos 130,0: mes "Value"
+		pos 130,20
+		value_txt=""
+		input value_txt,120,30
+		pos 130,50
+		button gosub "AddItem",*addItem_btn
+
+		pos 130,80: mes "Values"
+		pos 130,100
+		sdim values_txt
+		mesbox values_txt,120,130,1
+		values_id=stat
+
+		pos 250,0: mes "Key"
+		pos 250,20
+		key2_txt=""
+		input key2_txt,120,30
+		pos 250,50
+		button gosub "GetItem",*getItem_btn
+
+		pos 250,100
+		addValue_txt=""
+		input addValue_txt,120,30
+		addValue_id=stat
+		pos 250,130
+		button gosub "AddValue",*addValue_btn
+
+		pos 250,180: mes "Value"
+		pos 250,200
+		value2_txt=""
+		input value2_txt,120,30
+		value2_id=stat
+	return
+
+	#deffunc main
+		newForm
+		new@Dictionary dc,"str",{"
+		name:bob,
+		age:40,
+		hobby:ì«èë,
+		work:ïΩé–àı"}
+		reload
+	return
+
+	#deffunc reload
+		sdim keys
+		sdim values
+		dcForeach dc
+			keys+=dcKeys(dc,cnt)+"\n"
+			values+=dcValues(dc,cnt)+"\n"
+		loop
+		objprm keys_id,keys
+		objprm values_id,values
+	return
+
+	*setItem_btn
+		dcSet dc,key_txt,value_txt
+		reload
+	return
+
+	*addItem_btn
+		dcAdd dc,key_txt,value_txt
+		if stat {
+			dialog "AddError!"
+		}
+		reload
+	return
+
+	*getItem_btn
+		objprm value2_id,dcItem(dc,key2_txt)
+	return
+
+	*addValue_btn
+		dcReSet dc,key2_txt,"+",addValue_txt
+		reload
+		objprm value2_id,dcItem(dc,key2_txt)
+	return
+#global
+main
+stop

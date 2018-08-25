@@ -104,17 +104,17 @@
 	#define global dcSet(%1,%2,%3,%4=0) %tdcSet %i=%3 :dcSet@Dictionary %1,%2,%o,%4
 	#define global dcAdd(%1,%2,%3,%4=1) dcSet %1,%2,%3,%4
 
-	#modfunc local dcReSet str _key,str assign,var addValue
-		if assign="+" | assign="+=" {value=dcItem(thismod,_key)+addValue}
-		else:if assign="-" | assign="-=" {value=dcItem(thismod,_key)-addValue}
-		else:if assign="*" | assign="*=" {value=dcItem(thismod,_key)*addValue}
-		else:if assign="/" | assign="/=" {value=dcItem(thismod,_key)/addValue}
-		else:if assign="\\" | assign="\\=" {value=dcItem(thismod,_key)\addValue}
-		else:if assign="|" | assign="|=" {value=dcItem(thismod,_key)|addValue}
-		else:if assign="&" | assign="&=" {value=dcItem(thismod,_key)&addValue}
-		else:if assign="^" | assign="^=" {value=dcItem(thismod,_key)^addValue}
-		else:if assign="<<" | assign="<<=" {value=dcItem(thismod,_key)<<addValue}
-		else:if assign=">>" | assign=">>=" {value=dcItem(thismod,_key)>>addValue}
+	#modfunc local dcReSet str _key,str sign,var addValue
+		if sign="+" | sign="+=" {value=dcItem(thismod,_key)+addValue}
+		else:if sign="-" | sign="-=" {value=dcItem(thismod,_key)-addValue}
+		else:if sign="*" | sign="*=" {value=dcItem(thismod,_key)*addValue}
+		else:if sign="/" | sign="/=" {value=dcItem(thismod,_key)/addValue}
+		else:if sign="\\" | sign="\\=" {value=dcItem(thismod,_key)\addValue}
+		else:if sign="|" | sign="|=" {value=dcItem(thismod,_key)|addValue}
+		else:if sign="&" | sign="&=" {value=dcItem(thismod,_key)&addValue}
+		else:if sign="^" | sign="^=" {value=dcItem(thismod,_key)^addValue}
+		else:if sign="<<" | sign="<<=" {value=dcItem(thismod,_key)<<addValue}
+		else:if sign=">>" | sign=">>=" {value=dcItem(thismod,_key)>>addValue}
 		else {mes "Error"}
 		dcSet thismod,_key,value,0
 	return
