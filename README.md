@@ -28,7 +28,7 @@ repeat/foreachキーワードの代わりに使用します。
 要素のインデックスを順番に取得します。  
 
 * str key=dcKeys(struct dict, int index)  
-index=オブジェクトに登録される要素のインデックス値
+index=オブジェクトに登録される要素のインデックス値  
 インデックスに登録されているキーを取得します。
 
 * val value=dcValues(struct dict, int index)  
@@ -51,16 +51,16 @@ value=登録する値
 キーに値をセットします。  
 
 * dcAdd struct dict, str key, val value  
-dcSetと同様ですが、重複される値は登録されません。
+dcSetと同様ですが、重複される値は登録されません。  
 登録できなかった場合はstatに1が返ります。
 
 * dcReSet struct dict, str key, str assign, val addValue  
-key=再代入する要素のキー
-assign=演算子の文字列(+-*/\|&<<>>)
+key=再代入する要素のキー  
+assign=演算子の文字列(+-*/\|&<<>>)  
 addValue=演算子を適用する値  
 　  
-代入演算子に相当する命令です。
-assignに設定した演算子と値を適用して再代入します。
+代入演算子に相当する命令です。  
+assignに設定した演算子と値を適用して再代入します。  
 
 * val value=dcItem(struct dict, str key)  
 key=要素のキー  
@@ -68,9 +68,9 @@ value=取得した値
 　  
 要素を取得します。
 
-* int isSuccess=TryGetValue(struct dict, str key,var refValue)  
+* int isSuccess=TryGetValue(struct dict, str key, var refValue)  
 要素を取得できるか試します。
-取得できた場合は1を返し、refValueに値を返します。
+取得できた場合は1を返し、refValueに値を返します。  
 できなかった場合は0を返します。【未実装】  
 
 * dcRemove struct dict, str _key  
