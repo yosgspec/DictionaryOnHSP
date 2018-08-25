@@ -4,7 +4,7 @@
 dict=Dictionaryオブジェクト  
 type=型を示す文字列  
 initDict=Dictionaryに設定する初期値  
-
+　  
 Dictionaryオブジェクトを生成します。  
 newでは初期化する変数を自動で生成します。  
 配列などにDictionaryを格納する場合はnewsまたはnewmodをご利用ください。
