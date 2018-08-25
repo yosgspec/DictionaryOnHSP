@@ -54,13 +54,13 @@ value=登録する値
 dcSetと同様ですが、重複される値は登録されません。  
 登録できなかった場合はstatに1が返ります。
 
-* dcReSet struct dict, str key, str assign, val addValue  
+* dcReSet struct dict, str key, str sign, val addValue  
 key=再代入する要素のキー  
-assign=演算子の文字列(+-*/\|&<<>>)  
+sign=演算子の文字列(+-*/\|&<<>>)  
 addValue=演算子を適用する値  
 　  
 代入演算子に相当する命令です。  
-assignに設定した演算子と値を適用して再代入します。  
+signに設定した演算子と値を適用して再代入します。  
 
 * val value=dcItem(struct dict, str key)  
 key=要素のキー  
