@@ -1,4 +1,4 @@
-# Diction On HSP APIs
+# Dictionary On HSP APIs
 * new@Dictionary struct dict[, str type="str", str initDict]  
 * news@Dictionary struct dict[, str type="str", str initDict]  
 dict=Dictionaryオブジェクト  
