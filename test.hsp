@@ -1,0 +1,96 @@
+#runtime "hsp3cl"
+#include "Dictionary.as"
+
+new@Dictionary dc,"double"
+
+repeat 100
+	dcSet dc,"K"+cnt,cnt
+loop
+
+dcSet dc,"一二三","be"
+dcSet dc,"二三一",500
+dcSet dc,"三二一",1000
+mes "一二三"
+mes dcItem(dc,"一二三")
+mes "二三一"
+mes dcItem(dc,"二三一")
+mes "三二一"
+mes dcItem(dc,"三二一")
+dcSet dc,"三二一",50
+mes dcItem(dc,"三二一")
+
+mes "abcdef"
+dcSet dc,"abcdef",999
+mes dcItem(dc,"abcdef")
+
+mes "\"\""
+dcSet dc,"",777
+mes dcItem(dc,"")
+
+dcForeach dc
+	mes "key: "+dcKeys(dc,cnt)+" value: "+dcValues(dc,cnt)
+loop
+
+new@Dictionary abc,"str",{"
+	a:A,
+	b:B,
+	c:C,
+	d:D,
+	e:E,
+	f:F,
+	g:G,
+	h:H,
+	i:I,
+	j:J,
+	k:K,
+	l:L,
+	m:M,
+	n:N,
+	o:O,
+	p:P,
+	q:Q,
+	r:R,
+	s:S,
+	t:T,
+	u:U,
+	v:V,
+	w:W,
+	x:X,
+	y:Y,
+	z:Z,
+	A:a,
+	B:b,
+	C:c,
+	D:d,
+	E:e,
+	F:f,
+	G:g,
+	H:h,
+	I:i,
+	J:j,
+	K:k,
+	L:l,
+	M:m,
+	N:n,
+	O:o,
+	P:p,
+	Q:q,
+	R:r,
+	S:s,
+	T:t,
+	U:u,
+	V:v,
+	W:u,
+	X:x,
+	Y:y,
+	Z:z"}
+
+dcAdd abc,"あ","diiiii"
+mes stat
+dcAdd abc,"あ","diiiiiZ"
+mes stat
+dcReSet abc,"y","+=","YYYY"
+
+dcForeach abc
+	mes "key: "+dcKeys(abc,cnt)+" value: "+dcValues(abc,cnt)
+loop
