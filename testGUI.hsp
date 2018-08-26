@@ -57,11 +57,12 @@
 
 	#deffunc main
 		newForm
-		new@Dictionary dc,"str",{"
-		name:bob,
-		age:40,
-		hobby:ì«èë,
-		work:ïΩé–àı"}
+		new@Dictionary dc,"str",,,{"
+			name:bob,
+			age:40,
+			hobby:ì«èë,
+			work:ïΩé–àı
+		"}
 		reload
 	return
 

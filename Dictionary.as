@@ -33,16 +33,18 @@
 	#modcfunc dcGetType
 		return type
 
-	#define new(%1,%2="str",%3=dcNull) dimtype %1,5: newmod %1,Dictionary,%2,%3
-	#define news(%1,%2="str",%3=dcNull) newmod %1,Dictionary,%2,%3
-	#modinit str _T,str _dict
+	#define new(%1,%2="str",%3=":",%4=",",%5=dcNull) dimtype %1,5: newmod %1,Dictionary,%2,%3,%4,%5
+	#define news(%1,%2="str",%3=":",%4=",",%5=dcNull) newmod %1,Dictionary,%2,%3,%4,%5
+	#modinit str _T,str keySep,str itemSep,str _dict
 		count=0
 		isRehash=0
 		tableSize=32
 
 		dict=_dict
 		if dcNull!=dict {
-			split dict,",",dict
+			dict=strtrim(dict,2,dcCr)
+			dict=strtrim(dict,2,dcLf)
+			split dict,itemSep,dict
 			lenDict=length(dict)
 			repeat: if lenDict<tableSize: break: else: tableSize*=2: loop
 		}
@@ -58,7 +60,7 @@
 		sdim dictKey
 		sdim dictValue
 		foreach dict
-			split dict(cnt),":",dictKey,dictValue
+			split dict(cnt),keySep,dictKey,dictValue
 			dictKey=strtrim(dictKey,3,dcCr)
 			dictKey=strtrim(dictKey,3,dcLf)
 			dcSet thismod,dictKey,dictValue

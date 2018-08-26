@@ -1,8 +1,10 @@
 # Dictionary On HSP APIs
-* new@Dictionary struct dict[, str type="str", str initDict]  
-* news@Dictionary struct dict[, str type="str", str initDict]  
+* new@Dictionary struct dict[, str type="str", str keySep=":", itemSep=",", str initDict]  
+* news@Dictionary struct dict[, str type="str", str keySep=":", itemSep=",", str initDict]  
 dict=Dictionaryオブジェクト  
 type=型を示す文字列  
+keySep=initDictのキーと値の間の区切り文字  
+itemSep=initDictの要素ごとの区切り文字  
 initDict=Dictionaryに設定する初期値  
 　  
 Dictionaryオブジェクトを生成します。  
