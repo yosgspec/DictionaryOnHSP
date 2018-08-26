@@ -1,5 +1,6 @@
 # Dictionaryモジュール
 HSP製連想配列モジュールとそのサンプルです。
+github: https://github.com/yosgspec/DictionaryOnHSP
 
 * DictionayPreview.exe  
 testGUI.hspをコンパイルしたものです。  

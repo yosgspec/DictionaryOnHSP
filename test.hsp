@@ -1,4 +1,5 @@
 #runtime "hsp3cl"
+#cmpopt varinit 1
 #include "Dictionary.as"
 
 new@Dictionary dc,"double"
@@ -31,7 +32,7 @@ dcForeach dc
 	mes "key: "+dcKeys(dc,cnt)+" value: "+dcValues(dc,cnt)
 loop
 
-new@Dictionary abc,"str",{"
+new@Dictionary abc,"str",,,{"
 	a:A,
 	b:B,
 	c:C,
@@ -80,7 +81,7 @@ new@Dictionary abc,"str",{"
 	T:t,
 	U:u,
 	V:v,
-	W:u,
+	W:w,
 	X:x,
 	Y:y,
 	Z:z"}
@@ -91,6 +92,29 @@ dcAdd abc,"‚ ","diiiiiZ"
 mes stat
 dcReSet abc,"y","+=","YYYY"
 
+dcForeach abc
+	mes "key: "+dcKeys(abc,cnt)+" value: "+dcValues(abc,cnt)
+loop
+
+dimtype keys,vartype("struct")
+dimtype values,vartype("struct")
+dcRefKeysAndValues abc,keys,values
+foreach keys: mes keys.cnt+":"+values.cnt: loop
+
+mes dcContainsKey(abc,"‚ ")
+mes dcContainsKey(abc,"‚¢")
+mes dcContainsKey(abc,"Y")
+dcRemove abc,"Y"
+mes dcContainsKey(abc,"Y")
+
+dcForeach abc
+	mes "key: "+dcKeys(abc,cnt)+" value: "+dcValues(abc,cnt)
+loop
+
+mes dcJoinDict(abc)
+
+dcClear abc
+dcAdd abc,"aaa","hogee"
 dcForeach abc
 	mes "key: "+dcKeys(abc,cnt)+" value: "+dcValues(abc,cnt)
 loop
