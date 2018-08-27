@@ -88,7 +88,7 @@
 	#define global ctype dcJoinDict(%1,%2=":",%3="\\n") dcJoinDict@Dictionary(%1,%2,%3)
 
 	;コンストラクタ
-	#define new(%1,%2="str",%3=":",%4=",",%5=dcNull) dimtype %1,5: newmod %1,Dictionary,%2,%3,%4,%5
+	#define new(%1,%2="str",%3=":",%4=",",%5=dcNull) %tDictionary dimtype %1,5: newmod %1,Dictionary,%2,%3,%4,%5
 	#define news(%1,%2="str",%3=":",%4=",",%5=dcNull) newmod %1,Dictionary,%2,%3,%4,%5
 	#modinit str _type,str keySep,str itemSep,str _dict
 		count=0
@@ -96,6 +96,7 @@
 		tableSize=32
 
 		dict=_dict
+		dictLen=0
 		if dcNull!=dict {
 			;終端の改行除去
 			dict=strtrim(dict,2,charLf)
@@ -110,8 +111,8 @@
 		type=vartype(""+_type)
 		dim table,tableSize
 		tableSize80=int(0.8*tableSize)
-		sdim keyList,,1
-		dimtype valueList,type,1
+		sdim keyList,,dictLen
+		dimtype valueList,type,dictLen
 
 		if dcNull=dict: return
 		;初期値の設定
@@ -224,8 +225,8 @@
 
 	;値の取得の試行
 	#modcfunc dcTryGetValue str _key,var refValue
-		value=dcItem(thismod,_key)
-		if value=dcNull {
+		dcRefItem thismod,_key,value
+		if vartype(value)="str": if value=dcNull {
 			return 0
 		}
 		else {
@@ -245,7 +246,7 @@
 		escNullString _key,key
 		searchHash *item_notExist,*remove_exist
 
-		if value=dcNull: return 1
+		if vartype(value)="str": if value=dcNull: return 1
 		repeat count-index
 			i=cnt+index
 			keyList(i)=keyList(i+1)
