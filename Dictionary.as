@@ -16,11 +16,11 @@
 ;Dictionaryモジュール
 #module Dictionary table,tableSize,tableSize80,keyList,valueList,count,type
 	;null
-	#define global dcNull "__dcNull__"
+	#define global dcNull "__$dcNull__"
 	;空文字列エスケープ
-	#define nullString "__nullString__"
-	#define escNullString(%1,%2) if %2="": %1=nullString: else: %1=%2
-	#define usEscNullString(%1,%2) if %2=nullString: %1="": else: %1=%2
+	#define nullString "__$nullString__"
+	#define escNullString(%1,%2) if %1="": %2=nullString: else: %2=%1
+	#define unEscNullString(%1,%2) if %1=nullString: %2="": else: %2=%1
 	;改行文字
 	#const charCr $0D
 	#const charLf $0A
@@ -38,7 +38,7 @@
 	#define global dcForeach(%1) repeat dcCount(%1)
 	;インデックスからのキー取得
 	#modcfunc dcKeys int _index
-		usEscNullString key,keyList(_index)
+		unEscNullString keyList(_index),key
 		return key
 	;インデックスからの値取得
 	#modcfunc dcValues int _index
@@ -47,7 +47,7 @@
 	#modfunc dcRefKeys array refKeys
 		sdim refKeys,,count
 		repeat count
-			usEscNullString key,keyList(cnt)
+			unEscNullString keyList(cnt),key
 			refKeys(cnt)=key
 		loop
 	return
@@ -61,7 +61,7 @@
 		sdim refKeys,,count
 		dimtype refValues,type,count
 		repeat count
-			usEscNullString key,keyList(cnt)
+			unEscNullString keyList(cnt),key
 			refKeys(cnt)=key
 			refValues(cnt)=valueList(cnt)
 		loop
@@ -98,8 +98,8 @@
 		dict=_dict
 		if dcNull!=dict {
 			;終端の改行除去
-			dict=strtrim(dict,2,charCr)
 			dict=strtrim(dict,2,charLf)
+			dict=strtrim(dict,2,charCr)
 			;要素の分割
 			split dict,itemSep,dict
 			dictLen=length(dict)
@@ -126,11 +126,12 @@
 	return
 
 	;辞書型にキャスト
-	#modcfunc local castValue var _value
-		if type=2 {return str(_value)}
-		else:if type=3 {return double(_value)}
-		else:if type=4 {return int(_value)}
-	return
+	#define castValue(%1,%2) \
+		if type=2 {%2=str(%1)} \
+		else:if type=3 {%2=double(%1)} \
+		else:if type=4 {%2=int(%1)} \
+		else:if type=vartype(%1) {%2=%1} \
+		else {%2=dcNull}
 
 	;空のラベル型命令
 	*nullFunc:return
@@ -162,8 +163,10 @@
 
 	;値の登録
 	#modfunc local dcSet str _key,var _value,int isAdd
-		value=castValue(thismod,_value)
-		escNullString key,_key
+		dimtype value,type
+		castValue _value,value
+		if vartype(value)="str": if value=dcNull: return 2
+		escNullString _key,key
 		searchHash *set_notExist,*nullFunc
 
 		keyListLen=length(keyList)
@@ -210,9 +213,14 @@
 
 	;値の取得
 	#modcfunc dcItem str _key
-		escNullString key,_key
+		escNullString _key,key
 		searchHash *item_notExist,*item_exist
 	return value
+	#modfunc dcRefItem str _key,var refValue
+		escNullString _key,key
+		searchHash *item_notExist,*item_exist
+		refValue=value
+	return
 
 	;値の取得の試行
 	#modcfunc dcTryGetValue str _key,var refValue
@@ -234,7 +242,7 @@
 
 	;値の削除
 	#modfunc dcRemove str _key
-		escNullString key,_key
+		escNullString _key,key
 		searchHash *item_notExist,*remove_exist
 
 		if value=dcNull: return 1
@@ -264,7 +272,7 @@
 	;キーの有無
 	#modcfunc dcContainsKey str _key
 		isContains=0
-		escNullString key,_key
+		escNullString _key,key
 		searchHash *nullFunc,*cKeys_exist
 	return isContains
 

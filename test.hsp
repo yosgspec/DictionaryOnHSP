@@ -118,3 +118,13 @@ dcAdd abc,"aaa","hogee"
 dcForeach abc
 	mes "key: "+dcKeys(abc,cnt)+" value: "+dcValues(abc,cnt)
 loop
+
+new@Dictionary dcdc,"struct"
+dcSet dcdc,"dc",dc
+dcSet dcdc,"abc",abc
+
+dimtype tmp,5
+dcRefItem dcdc,"dc",tmp
+mes dcItem(tmp,"ŽO“ñˆê")
+dcRefItem dcdc,"abc",tmp
+mes dcItem(tmp,"aaa")

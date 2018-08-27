@@ -63,9 +63,11 @@ itemSep=要素ごとの区切り文字
 登録した型を返します。  
 
 * dcSet struct dict, str key, val value  
-key=登録するキー
-value=登録する値
+key=登録するキー  
+value=登録する値  
+　  
 キーに値をセットします。  
+ラベル型、モジュール型の場合は型が異なると失敗し、statに2が返ります。
 
 * dcAdd struct dict, str key, val value  
 dcSetと同様ですが、重複される値は登録されません。  
@@ -85,6 +87,12 @@ value=取得した値
 　  
 要素を取得します。  
 見つからなかった場合はdcNullが返ります。
+
+* dcRefItem(struct dict, str key, var refValue)  
+refValue=取得した値  
+　  
+dcItemの参照渡し版。  
+ラベル型やモジュール型の値を取得する場合は使用する必要があります。
 
 * int isSuccess=TryGetValue(struct dict, str key, var refValue)  
 要素を取得できるか試します。
