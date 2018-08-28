@@ -138,22 +138,22 @@
 	*nullFunc:return
 
 	;ハッシュの検索
-	#modfunc local __searchHash var notExistFn,var existFn
-		hashKey=int(dcGetHashCode(key)\tableSize)
+	#modfunc local __searchHash str _key,var notExistFn,var existFn
+		hashKey=int(dcGetHashCode(_key)\tableSize)
 		repeat
 			index=table(hashKey)-1
 			if index<0 {
 				gosub notExistFn
 				break
 			}
-			else:if keyList(index)=key {
+			else:if keyList(index)=_key {
 				gosub existFn
 				break
 			}
 			hashKey=(hashKey+tableSize-1)\tableSize
 		loop
 	return
-	#define searchHash(%1,%2) %tsearchHash %i=%2:%i=%1:__searchHash thismod,%o,%o
+	#define searchHash(%1,%2,%3) %tsearchHash %i=%3:%i=%2:__searchHash thismod,%1,%o,%o
 
 	;キーが存在しない時の処理
 	*set_notExist
@@ -164,11 +164,10 @@
 
 	;値の登録
 	#modfunc local dcSet str _key,var _value,int isAdd
-		dimtype value,type
 		castValue _value,value
 		if vartype(value)="str": if value=dcNull: return 2
 		escNullString _key,key
-		searchHash *set_notExist,*nullFunc
+		searchHash key,*set_notExist,*nullFunc
 
 		keyListLen=length(keyList)
 		if keyList(0)="": keyListLen--
@@ -187,18 +186,23 @@
 
 	;代入演算子
 	#modfunc local dcReSet str _key,str sign,var addValue
-		if sign="+" | sign="+=" {value=dcItem(thismod,_key)+addValue}
-		else:if sign="-" | sign="-=" {value=dcItem(thismod,_key)-addValue}
-		else:if sign="*" | sign="*=" {value=dcItem(thismod,_key)*addValue}
-		else:if sign="/" | sign="/=" {value=dcItem(thismod,_key)/addValue}
-		else:if sign="\\" | sign="\\=" {value=dcItem(thismod,_key)\addValue}
-		else:if sign="|" | sign="|=" {value=dcItem(thismod,_key)|addValue}
-		else:if sign="&" | sign="&=" {value=dcItem(thismod,_key)&addValue}
-		else:if sign="^" | sign="^=" {value=dcItem(thismod,_key)^addValue}
-		else:if sign="<<" | sign="<<=" {value=dcItem(thismod,_key)<<addValue}
-		else:if sign=">>" | sign=">>=" {value=dcItem(thismod,_key)>>addValue}
+;		#define reSetSign(%1) dcSet@ thismod,_key,dcItem(thismod,_key)%1addValue
+		#define reSetSign(%1) \
+			escNullString _key,key :\
+			searchHash key,*nullFunc,*nullFunc :\
+			if 0<=index {valueList(index)=valueList(index)%1addValue}\
+			else {return 1}
+		if sign="+" | sign="+=" {reSetSign +}
+		else:if sign="-" | sign="-=" {reSetSign -}
+		else:if sign="*" | sign="*=" {reSetSign *}
+		else:if sign="/" | sign="/=" {reSetSign /}
+		else:if sign="\\" | sign="\\=" {reSetSign \}
+		else:if sign="|" | sign="|=" {reSetSign |}
+		else:if sign="&" | sign="&=" {reSetSign &}
+		else:if sign="^" | sign="^=" {reSetSign ^}
+		else:if sign="<<" | sign="<<=" {reSetSign <<}
+		else:if sign=">>" | sign=">>=" {reSetSign >>}
 		else {return 1}
-		dcSet thismod,_key,value,0
 	return 0
 	#define global dcReSet(%1,%2,%3,%4) %tdcReSet %i=%4 :dcReSet@Dictionary %1,%2,%3,%o
 
@@ -215,11 +219,11 @@
 	;値の取得
 	#modcfunc dcItem str _key
 		escNullString _key,key
-		searchHash *item_notExist,*item_exist
+		searchHash key,*item_notExist,*item_exist
 	return value
 	#modfunc dcRefItem str _key,var refValue
 		escNullString _key,key
-		searchHash *item_notExist,*item_exist
+		searchHash key,*item_notExist,*item_exist
 		refValue=value
 	return
 
@@ -244,7 +248,7 @@
 	;値の削除
 	#modfunc dcRemove str _key
 		escNullString _key,key
-		searchHash *item_notExist,*remove_exist
+		searchHash key,*item_notExist,*remove_exist
 
 		if vartype(value)="str": if value=dcNull: return 1
 		repeat count-index
@@ -274,7 +278,7 @@
 	#modcfunc dcContainsKey str _key
 		isContains=0
 		escNullString _key,key
-		searchHash *nullFunc,*cKeys_exist
+		searchHash key,*nullFunc,*cKeys_exist
 	return isContains
 
 	;値の有無
