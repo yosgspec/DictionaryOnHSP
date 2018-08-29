@@ -1,130 +1,103 @@
 #ifndef Dictionary
-;公開関数のエイリアス
-#ifndef DictionaryAliasOff
-	#define global dcGetHashCode getHashCode@Dictionary
-	#define global dcNull null@Dictionary
-	#define global dcCount count@Dictionary
-	#define global dcGetType getType@Dictionary
-	#define global dcGetTableSize getTableSize@Dictionary
-	#define global dcForeach foreach@Dictionary
-	#define global dcKeys keys@Dictionary
-	#define global dcValues values@Dictionary
-	#define gloval dcRefKeys refKeys@Dictionary
-	#define global dcRefValues refValues@Dictionary
-	#define global dcRefKeysAndValues refKeysAndValues@Dictionary
-	#define global dcJoinArray joinArray@Dictionary
-	#define global dcJoinDict joinDict@Dictionary
-	#define global dcSet set@Dictionary
-	#define global dcAdd add@Dictionary
-	#define global dcReSet reSet@Dictionary
-	#define global dcItem item@Dictionary
-	#define global dcRefItem refItem@Dictionary
-	#define global dcTryGetValue tryGetValue@Dictionary
-	#define global dcRemove remove@Dictionary
-	#define global dcClear clear@Dictionary
-	#define global dcContainsKey containsKey@Dictionary
-	#define global dcContainsValue containsValue@Dictionary
-	#define global dcFinalize finalize@Dictionary
-#endif
+
+;ハッシュ関数(FNV 32bit)
+#module @dcGetHashCode
+	#defcfunc dcGetHashCode str _s
+		s=_s
+		#const offset_basis 2166136261
+		#const FNV_prime 16777619
+		hash=offset_basis
+		repeat strlen(s)
+			hash=(hash^peek(s,cnt))*FNV_prime
+		loop
+	return double(strf("%u",hash))
+#global
 
 ;Dictionaryモジュール
-#module Dictionary table,tableSize,tableSize80,keyList,valueList,thisCount,type
-	;ハッシュ関数
-	#define getHashCode fnvHash32@@fnvHash32
-
+#module Dictionary table,tableSize,tableSize80,keyList,valueList,count,type
 	;null
-	#define null "__$dcNull__"
-	
+	#define global dcNull "__$dcNull__"
 	;空文字列エスケープ
 	#define nullString "__$nullString__"
 	#define escNullString(%1,%2) if %1="": %2=nullString: else: %2=%1
 	#define unEscNullString(%1,%2) if %1=nullString: %2="": else: %2=%1
-
 	;改行文字
 	#const charCr $0D
 	#const charLf $0A
-
 	;要素数
-	#modcfunc local count
-		return thisCount
-
+	#modcfunc dcCount
+		return count
 	;辞書型
-	#modcfunc local getType
+	#modcfunc dcGetType
 		return type
-
 	;ハッシュテーブルサイズ
-	#modcfunc local getTableSize
+	#modcfunc dcTableSize
 		return tableSize
 
 	;Dictionary用foreachキーワード
-	#define global foreach@Dictionary(%1) repeat count@Dictionary(%1)
-
+	#define global dcForeach(%1) repeat dcCount(%1)
 	;インデックスからのキー取得
-	#modcfunc local keys int _index
+	#modcfunc dcKeys int _index
 		unEscNullString keyList(_index),key
 		return key
-
 	;インデックスからの値取得
-	#modcfunc local values int _index
+	#modcfunc dcValues int _index
 		return valueList(_index)
-
 	;キー配列の取得
-	#modfunc local refKeys array refKeyList
-		sdim refKeyList,,thisCount
-		repeat thisCount
+	#modfunc dcRefKeys array refKeys
+		sdim refKeys,,count
+		repeat count
 			unEscNullString keyList(cnt),key
-			refKeyList(cnt)=key
+			refKeys(cnt)=key
 		loop
 	return
-
 	;値配列の取得
-	#modfunc local refValues array refValueList
-		dimtype refValueList,type,thisCount
-		repeat thisCount: refValueList(cnt)=valueList(cnt): loop
+	#modfunc dcRefValues array refValues
+		dimtype refValues,type,count
+		repeat count: refValues(cnt)=valueList(cnt): loop
 	return
-
 	;キー、値配列の取得
-	#modfunc local refKeysAndValues array refKeyList,array refValueList
-		sdim refKeyList,,thisCount
-		dimtype refValueList,type,thisCount
-		repeat thisCount
+	#modfunc dcRefKeysAndValues array refKeys,array refValues
+		sdim refKeys,,count
+		dimtype refValues,type,count
+		repeat count
 			unEscNullString keyList(cnt),key
-			refKeyList(cnt)=key
-			refValueList(cnt)=valueList(cnt)
+			refKeys(cnt)=key
+			refValues(cnt)=valueList(cnt)
 		loop
 	return
 
 	;配列の連結
-	#define ctype joinArray(%1,%2=",") __joinArray@Dictionary(%1,%2)
-	#defcfunc local __joinArray array ary,str sep
+	#defcfunc local dcJoinArray array ary,str sep
 		s=""
 		foreach ary
 			if 0<cnt: s+=sep
 			s+=ary(cnt)
 		loop
 	return s
+	#define global ctype dcJoinArray(%1,%2=",") dcJoinArray@Dictionary(%1,%2)
 
 	;Dictionaryの連結
-	#define ctype joinDict(%1,%2=":",%3="\\n") __joinDict@Dictionary(%1,%2,%3)
-	#modcfunc local __joinDict str keySep,str itemSep
+	#modcfunc local dcJoinDict str keySep,str itemSep
 		s=""
-		repeat thisCount
+		repeat count
 			if 0<cnt: s+=itemSep
-			s+=keys(thismod,cnt)+keySep+valueList(cnt)
+			s+=dcKeys(thismod,cnt)+keySep+valueList(cnt)
 		loop
 	return s
+	#define global ctype dcJoinDict(%1,%2=":",%3="\\n") dcJoinDict@Dictionary(%1,%2,%3)
 
 	;コンストラクタ
-	#define new(%1,%2="str",%3=":",%4=",",%5=null@Dictionary) %tDictionary dimtype %1,5: newmod %1,Dictionary,%2,%3,%4,%5
-	#define news(%1,%2="str",%3=":",%4=",",%5=null@Dictionary) newmod %1,Dictionary,%2,%3,%4,%5
+	#define new(%1,%2="str",%3=":",%4=",",%5=dcNull) %tDictionary dimtype %1,5: newmod %1,Dictionary,%2,%3,%4,%5
+	#define news(%1,%2="str",%3=":",%4=",",%5=dcNull) newmod %1,Dictionary,%2,%3,%4,%5
 	#modinit str _type,str keySep,str itemSep,str _dict
-		thisCount=0
+		count=0
 		isRehash=0
 		tableSize=32
 
 		dict=_dict
 		dictLen=0
-		if dict!=null {
+		if dcNull!=dict {
 			;終端の改行除去
 			dict=strtrim(dict,2,charLf)
 			dict=strtrim(dict,2,charCr)
@@ -141,7 +114,7 @@
 		sdim keyList,,dictLen
 		dimtype valueList,type,dictLen
 
-		if dict=null: return
+		if dcNull=dict: return
 		;初期値の設定
 		sdim dictKey
 		sdim dictValue
@@ -149,7 +122,7 @@
 			split dict(cnt),keySep,dictKey,dictValue
 			dictKey=strtrim(dictKey,3,charCr)
 			dictKey=strtrim(dictKey,3,charLf)
-			__set thismod,dictKey,dictValue,0
+			dcSet thismod,dictKey,dictValue
 		loop
 	return
 
@@ -159,14 +132,14 @@
 		else:if type=3 {%2=double(%1)} \
 		else:if type=4 {%2=int(%1)} \
 		else:if type=vartype(%1) {%2=%1} \
-		else {%2=null@Dictionary}
+		else {%2=dcNull}
 
 	;空のラベル型命令
 	*nullFunc:return
 
 	;ハッシュの検索
 	#modfunc local __searchHash str _key,var notExistFn,var existFn
-		hashKey=int(getHashCode(_key)\tableSize)
+		hashKey=int(dcGetHashCode(_key)\tableSize)
 		repeat
 			index=table(hashKey)-1
 			if index<0 {
@@ -184,16 +157,15 @@
 
 	;キーが存在しない時の処理
 	*set_notExist
-		index=thisCount
-		thisCount++
-		table(hashKey)=thisCount
+		index=count
+		count++
+		table(hashKey)=count
 	return
 
 	;値の登録
-	#define set(%1,%2,%3,%4=0) %tdcSet %i=%3 :__set@Dictionary %1,%2,%o,%4
-	#modfunc local __set str _key,var _value,int isAdd
+	#modfunc local dcSet str _key,var _value,int isAdd
 		castValue _value,value
-		if vartype(value)="str": if value=null: return 2
+		if vartype(value)="str": if value=dcNull: return 2
 		escNullString _key,key
 		searchHash key,*set_notExist,*nullFunc
 
@@ -205,17 +177,16 @@
 		if isRehash: return 0
 
 		valueList(index)=value
-		if tableSize80<thisCount {
+		if tableSize80<count {
 			reHash thismod,tableSize*2
 		}
 	return 0
-
-	;値の追加
-	#define add(%1,%2,%3) set@Dictionary %1,%2,%3,1
+	#define global dcSet(%1,%2,%3,%4=0) %tdcSet %i=%3 :dcSet@Dictionary %1,%2,%o,%4
+	#define global dcAdd(%1,%2,%3) dcSet %1,%2,%3,1
 
 	;代入演算子
-	#define reSet(%1,%2,%3,%4) %tdcReSet %i=%4 :__ReSet@Dictionary %1,%2,%3,%o
-	#modfunc local __reSet str _key,str sign,var addValue
+	#modfunc local dcReSet str _key,str sign,var addValue
+;		#define reSetSign(%1) dcSet@ thismod,_key,dcItem(thismod,_key)%1addValue
 		#define reSetSign(%1) \
 			escNullString _key,key :\
 			searchHash key,*nullFunc,*nullFunc :\
@@ -233,10 +204,11 @@
 		else:if sign=">>" | sign=">>=" {reSetSign >>}
 		else {return 1}
 	return 0
+	#define global dcReSet(%1,%2,%3,%4) %tdcReSet %i=%4 :dcReSet@Dictionary %1,%2,%3,%o
 
 	;キーが存在しない時の処理
 	*item_notExist
-		value=null
+		value=dcNull
 	return
 
 	;キーが存在する時の処理
@@ -245,20 +217,20 @@
 	return
 
 	;値の取得
-	#modcfunc local item str _key
+	#modcfunc dcItem str _key
 		escNullString _key,key
 		searchHash key,*item_notExist,*item_exist
 	return value
-	#modfunc local refItem str _key,var refValue
+	#modfunc dcRefItem str _key,var refValue
 		escNullString _key,key
 		searchHash key,*item_notExist,*item_exist
 		refValue=value
 	return
 
 	;値の取得の試行
-	#modcfunc local tryGetValue str _key,var refValue
-		refItem thismod,_key,value
-		if vartype(value)="str": if value=null {
+	#modcfunc dcTryGetValue str _key,var refValue
+		dcRefItem thismod,_key,value
+		if vartype(value)="str": if value=dcNull {
 			return 0
 		}
 		else {
@@ -269,17 +241,17 @@
 	;キーが存在する時の処理
 	*remove_exist
 		value=valueList(index)
-		thisCount--
+		count--
 		table(hashKey)=0
 	return
 
 	;値の削除
-	#modfunc local remove str _key
+	#modfunc dcRemove str _key
 		escNullString _key,key
 		searchHash key,*item_notExist,*remove_exist
 
-		if vartype(value)="str": if value=null: return 1
-		repeat thisCount-index
+		if vartype(value)="str": if value=dcNull: return 1
+		repeat count-index
 			i=cnt+index
 			keyList(i)=keyList(i+1)
 			valueList(i)=valueList(i+1)
@@ -287,8 +259,8 @@
 	return 0 
 
 	;辞書のクリア
-	#modfunc local clear
-		thisCount=0
+	#modfunc dcClear
+		count=0
 		isRehash=0
 		tableSize=32
 		dim table,tableSize
@@ -303,16 +275,16 @@
 	return
 
 	;キーの有無
-	#modcfunc local containsKey str _key
+	#modcfunc dcContainsKey str _key
 		isContains=0
 		escNullString _key,key
 		searchHash key,*nullFunc,*cKeys_exist
 	return isContains
 
 	;値の有無
-	#modcfunc local containsValue str _value
+	#modcfunc dcContainsValue str _value
 		isContains=0
-		repeat thisCount
+		repeat count
 			if valueList(cnt)=_value {
 				isContains=1
 				break
@@ -323,32 +295,19 @@
 
 	;ハッシュの再配置
 	#modfunc local reHash int tableSizeNext
-		_itemCount=thisCount
+		_count=count
 		tableSize=tableSizeNext
 		tableSize80=int(0.8*tableSize)
-		thisCount=0
+		count=0
 		isRehash=1
 		dim table,tableSize
-		repeat _itemCount
-			set thismod,keyList(cnt),valueList(cnt)
+		repeat _count
+			dcSet thismod,keyList(cnt),valueList(cnt)
 		loop
 		isRehash=0
 	return
 
 	;デストラクタ
-	#define finalize(%1) delmod %1
-#global
-
-;ハッシュ関数(FNV 32bit)
-#module @fnvHash32
-	#defcfunc local fnvHash32 str _s
-		s=_s
-		#const offset_basis 2166136261
-		#const FNV_prime 16777619
-		hash=offset_basis
-		repeat strlen(s)
-			hash=(hash^peek(s,cnt))*FNV_prime
-		loop
-	return double(strf("%u",hash))
+	#define Finalize(%1) delmod %1
 #global
 #endif

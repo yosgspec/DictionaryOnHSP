@@ -1,5 +1,6 @@
 #runtime "hsp3cl"
 #cmpopt varinit 1
+;#define DictionaryAliasOff
 #include "Dictionary.as"
 
 new@Dictionary dc,"double"
