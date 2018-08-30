@@ -2,7 +2,7 @@
 HSP製連想配列モジュールとそのサンプルです。
 github: https://github.com/yosgspec/DictionaryOnHSP
 
-* DictionayPreview.exe  
+* DictionaryPreview.exe  
 testGUI.hspをコンパイルしたものです。  
 モジュールの基本機能をGUIで見ることができます。  
 
