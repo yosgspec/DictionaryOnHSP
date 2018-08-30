@@ -15,5 +15,8 @@ DictionaryモジュールのAPI一覧です。
 * testGUI.hsp  
 DictionayPreview.exeのソースファイルです。  
 
+* testGUIAliasOff.hsp
+testGUI.hspにDictionaryAliasOffを適用したサンプルファイルです。
+
 * test.hsp  
 雑なテストファイルです。  

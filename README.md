@@ -16,12 +16,13 @@ Dictionaryモジュールで空と見なす定数です。
 
 * double hashCode=dcGetHashCode(str s)  
 s=ハッシュ化する文字列  
+　  
 Dictionaryモジュールで使用するハッシュ関数する。  
 
-* int count=dcCount()  
+* int itemcount=dcCount()  
 登録されている要素数を返します。  
 
-* int tableSize=dcTableSize(struct dict)  
+* int tableSize=dcGetTableSize(struct dict)  
 ハッシュテーブルのサイズを取得します。  
 ハッシュテーブルのサイズは必要に応じて自動で拡張されます。  
 
@@ -111,6 +112,35 @@ dcItemの参照渡し版。
 * int isContains=dcContainsValue(struct dict, str _value)  
 値が存在するか確かめます(線形探索)。  
 
-* finalize@Dictionary struct dict  
+* dcFinalize@Dictionary struct dict  
 オブジェクトを解放します。  
 delmodと同一です。
+
+* #define DictionaryAliasOff
+本モジュールをインクルードする前に宣言するとdcから始まる定義を全て無効化します。  
+その場合次の対応に従って命令/関数を呼び出す必要があります。  
+　  
+dcGetHashCode => getHashCode@Dictionary  
+dcNull => null@Dictionary  
+dcCount => count@Dictionary  
+dcGetType => getType@Dictionary  
+dcGetTableSize => getTableSize@Dictionary  
+dcForeach => foreach@Dictionary  
+dcKeys => keys@Dictionary  
+dcValues => values@Dictionary  
+dcRefKeys => refKeys@Dictionary  
+dcRefValues => refValues@Dictionary  
+dcRefKeysAndValues => refKeysAndValues@Dictionary  
+dcJoinArray => joinArray@Dictionary  
+dcJoinDict => joinDict@Dictionary  
+dcSet => set@Dictionary  
+dcAdd => add@Dictionary  
+dcReSet => reSet@Dictionary  
+dcItem => item@Dictionary  
+dcRefItem => refItem@Dictionary  
+dcTryGetValue => tryGetValue@Dictionary  
+dcRemove => remove@Dictionary  
+dcClear => clear@Dictionary  
+dcContainsKey => containsKey@Dictionary  
+dcContainsValue => containsValue@Dictionary  
+dcFinalize => finalize@Dictionary  

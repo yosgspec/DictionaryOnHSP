@@ -1,5 +1,5 @@
 #ifndef Dictionary
-;公開関数のエイリアス
+;公開するAPIのエイリアス
 #ifndef DictionaryAliasOff
 	#define global dcGetHashCode getHashCode@Dictionary
 	#define global dcNull null@Dictionary
@@ -9,7 +9,7 @@
 	#define global dcForeach foreach@Dictionary
 	#define global dcKeys keys@Dictionary
 	#define global dcValues values@Dictionary
-	#define gloval dcRefKeys refKeys@Dictionary
+	#define global dcRefKeys refKeys@Dictionary
 	#define global dcRefValues refValues@Dictionary
 	#define global dcRefKeysAndValues refKeysAndValues@Dictionary
 	#define global dcJoinArray joinArray@Dictionary
@@ -34,6 +34,7 @@
 
 	;null
 	#define null "__$dcNull__"
+	#const typeStr 2
 	
 	;空文字列エスケープ
 	#define nullString "__$nullString__"
@@ -193,7 +194,7 @@
 	#define set(%1,%2,%3,%4=0) %tdcSet %i=%3 :__set@Dictionary %1,%2,%o,%4
 	#modfunc local __set str _key,var _value,int isAdd
 		castValue _value,value
-		if vartype(value)="str": if value=null: return 2
+		if vartype(value)=typeStr: if value=null: return 2
 		escNullString _key,key
 		searchHash key,*set_notExist,*nullFunc
 
@@ -258,7 +259,7 @@
 	;値の取得の試行
 	#modcfunc local tryGetValue str _key,var refValue
 		refItem thismod,_key,value
-		if vartype(value)="str": if value=null {
+		if vartype(value)=typeStr: if value=null {
 			return 0
 		}
 		else {
@@ -278,7 +279,7 @@
 		escNullString _key,key
 		searchHash key,*item_notExist,*remove_exist
 
-		if vartype(value)="str": if value=null: return 1
+		if vartype(value)=typeStr: if value=null: return 1
 		repeat thisCount-index
 			i=cnt+index
 			keyList(i)=keyList(i+1)

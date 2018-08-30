@@ -1,5 +1,7 @@
 #cmpopt varinit 1
+#define DictionaryAliasOff
 #include "Dictionary.as"
+#define global ctype dc(%1) %1@Dictionary
 
 #module Program
 	#deffunc newForm
@@ -66,21 +68,21 @@
 	#deffunc reload
 		sdim keys
 		sdim values
-		dcForeach dict
-			keys+=dcKeys(dict,cnt)+"\n"
-			values+=dcValues(dict,cnt)+"\n"
+		dc(foreach) dict
+			keys+=dc(keys)(dict,cnt)+"\n"
+			values+=dc(values)(dict,cnt)+"\n"
 		loop
 		objprm keys_id,keys
 		objprm values_id,values
 	return
 
 	*setItem_btn
-		dcSet dict,key_txt,value_txt
+		dc(set) dict,key_txt,value_txt
 		reload
 	return
 
 	*addItem_btn
-		dcAdd dict,key_txt,value_txt
+		dc(add) dict,key_txt,value_txt
 		if stat {
 			dialog "AddError!"
 			return
@@ -89,8 +91,8 @@
 	return
 
 	*getItem_btn
-		value=dcItem(dict,key_txt)
-		if value=dcNull {
+		value=dc(item)(dict,key_txt)
+		if value=dc(null) {
 			dialog "NotContainsKey!"
 			return
 		}
@@ -98,17 +100,17 @@
 	return
 
 	*addValue_btn
-		dcReSet dict,key_txt,"+",addValue_txt
+		dc(reSet) dict,key_txt,"+",addValue_txt
 		if stat {
 			dialog "AddValueError!"
 			return
 		}
 		reload
-		objprm value_id,dcItem(dict,key_txt)
+		objprm value_id,dc(item)(dict,key_txt)
 	return
 
 	*removeItem_btn
-		dcRemove dict,key_txt
+		dc(remove) dict,key_txt
 		if stat {
 			dialog "RemoveError!"
 			return
@@ -117,7 +119,7 @@
 	return
 
 	*viewAll_btn
-		dialog dcJoinDict(dict)
+		dialog dc(joinDict)(dict)
 	return
 #global
 main

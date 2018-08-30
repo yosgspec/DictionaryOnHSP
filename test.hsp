@@ -3,34 +3,34 @@
 ;#define DictionaryAliasOff
 #include "Dictionary.as"
 
-new@Dictionary dc,"double"
+new@Dictionary dict,"double"
 
 repeat 100
-	dcSet dc,"K"+cnt,cnt
+	dcSet dict,"K"+cnt,cnt
 loop
 
-dcSet dc,"一二三","be"
-dcSet dc,"二三一",500
-dcSet dc,"三二一",1000
+dcSet dict,"一二三","be"
+dcSet dict,"二三一",500
+dcSet dict,"三二一",1000
 mes "一二三"
-mes dcItem(dc,"一二三")
+mes dcItem(dict,"一二三")
 mes "二三一"
-mes dcItem(dc,"二三一")
+mes dcItem(dict,"二三一")
 mes "三二一"
-mes dcItem(dc,"三二一")
-dcSet dc,"三二一",50
-mes dcItem(dc,"三二一")
+mes dcItem(dict,"三二一")
+dcSet dict,"三二一",50
+mes dcItem(dict,"三二一")
 
 mes "abcdef"
-dcSet dc,"abcdef",999
-mes dcItem(dc,"abcdef")
+dcSet dict,"abcdef",999
+mes dcItem(dict,"abcdef")
 
 mes "\"\""
-dcSet dc,"",777
-mes dcItem(dc,"")
+dcSet dict,"",777
+mes dcItem(dict,"")
 
-dcForeach dc
-	mes "key: "+dcKeys(dc,cnt)+" value: "+dcValues(dc,cnt)
+dcForeach dict
+	mes "key: "+dcKeys(dict,cnt)+" value: "+dcValues(dict,cnt)
 loop
 
 new@Dictionary abc,"str",,,{"
@@ -121,11 +121,11 @@ dcForeach abc
 loop
 
 new@Dictionary dcdc,"struct"
-dcSet dcdc,"dc",dc
+dcSet dcdc,"dict",dict
 dcSet dcdc,"abc",abc
 
 dimtype tmp,5
-dcRefItem dcdc,"dc",tmp
+dcRefItem dcdc,"dict",tmp
 mes dcItem(tmp,"三二一")
 dcRefItem dcdc,"abc",tmp
 mes dcItem(tmp,"aaa")
