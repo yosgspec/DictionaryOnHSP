@@ -17,9 +17,9 @@ Dictionaryモジュールで空と見なす定数です。
 * double hashCode=dcGetHashCode(str s)  
 s=ハッシュ化する文字列  
 　  
-Dictionaryモジュールで使用するハッシュ関数する。  
+Dictionaryモジュールで使用するハッシュ関数を使用します。  
 
-* int itemcount=dcCount()  
+* int itemount=dcCount()  
 登録されている要素数を返します。  
 
 * int tableSize=dcGetTableSize(struct dict)  
@@ -95,7 +95,7 @@ refValue=取得した値
 dcItemの参照渡し版。  
 ラベル型やモジュール型の値を取得する場合は使用する必要があります。
 
-* int isSuccess=TryGetValue(struct dict, str key, var refValue)  
+* int isSuccess=dcTryGetValue(struct dict, str key, var refValue)  
 要素を取得できるか試します。
 取得できた場合は1を返し、refValueに値を返します。  
 できなかった場合は0を返します。  

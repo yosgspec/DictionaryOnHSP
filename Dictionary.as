@@ -184,23 +184,27 @@
 	#define searchHash(%1,%2,%3) %tsearchHash %i=%3:%i=%2:__searchHash thismod,%1,%o,%o
 
 	;キーが存在しない時の処理
-	*set_notExist
-		index=thisCount
-		thisCount++
-		table(hashKey)=thisCount
+	*set_Exist
+		isContains=1
 	return
 
 	;値の登録
 	#define set(%1,%2,%3,%4=0) %tdcSet %i=%3 :__set@Dictionary %1,%2,%o,%4
 	#modfunc local __set str _key,var _value,int isAdd
+		isContains=0
 		castValue _value,value
 		if vartype(value)=typeStr: if value=null: return 2
 		escNullString _key,key
-		searchHash key,*set_notExist,*nullFunc
+		searchHash key,*nullFunc,*set_Exist
 
-		keyListLen=length(keyList)
-		if keyList(0)="": keyListLen--
-		if isAdd & index<keyListLen: return 1
+		if isAdd & isContains: return 1
+		if 1!isContains {
+			index=thisCount
+			thisCount++
+			table(hashKey)=thisCount
+		}
+
+		mes index
 		keyList(index)=key
 
 		if isRehash: return 0
@@ -280,10 +284,9 @@
 		searchHash key,*item_notExist,*remove_exist
 
 		if vartype(value)=typeStr: if value=null: return 1
-		repeat thisCount-index
-			i=cnt+index
-			keyList(i)=keyList(i+1)
-			valueList(i)=valueList(i+1)
+		repeat thisCount-index,index
+			keyList(cnt)=keyList(cnt+1)
+			valueList(cnt)=valueList(cnt+1)
 		loop
 	return 0 
 
@@ -298,16 +301,11 @@
 		dimtype valueList,type,1
 	return
 
-	;キーが存在する時の処理
-	*cKeys_exist
-		isContains=1
-	return
-
 	;キーの有無
 	#modcfunc local containsKey str _key
 		isContains=0
 		escNullString _key,key
-		searchHash key,*nullFunc,*cKeys_exist
+		searchHash key,*nullFunc,*set_exist
 	return isContains
 
 	;値の有無
