@@ -112,7 +112,7 @@ dcItemの参照渡し版。
 * int isContains=dcContainsValue(struct dict, str _value)  
 値が存在するか確かめます(線形探索)。  
 
-* dcFinalize@Dictionary struct dict  
+* dcFinalize struct dict  
 オブジェクトを解放します。  
 delmodと同一です。
 

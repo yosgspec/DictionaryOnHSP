@@ -204,7 +204,6 @@
 			table(hashKey)=thisCount
 		}
 
-		mes index
 		keyList(index)=key
 
 		if isRehash: return 0
