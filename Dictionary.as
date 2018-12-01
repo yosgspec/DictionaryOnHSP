@@ -347,6 +347,6 @@
 		repeat strlen(s)
 			hash=(hash^peek(s,cnt))*FNV_prime
 		loop
-	return double(strf("%u",hash))
+	return abs(hash)
 #global
 #endif
