@@ -19,7 +19,7 @@ s=ハッシュ化する文字列
 　  
 Dictionaryモジュールで使用するハッシュ関数を使用します。  
 
-* int itemount=dcCount()  
+* int itemount=dcCount(struct dict)  
 登録されている要素数を返します。  
 
 * int tableSize=dcGetTableSize(struct dict)  
@@ -31,11 +31,11 @@ repeat/foreachキーワードの代わりに使用します。
 要素のインデックスを順番に取得します。  
 
 * str key=dcKeys(struct dict, int index)  
-index=オブジェクトに登録される要素のインデックス値  
-インデックスに登録されているキーを取得します。
+index=オブジェクトに登録される要素の添字  
+添字に登録されているキーを取得します。
 
 * val value=dcValues(struct dict, int index)  
-インデックスに登録されている値を取得します。  
+添字に登録されている値を取得します。  
 
 * dcRefKeys struct dict, ref array keys  
 keys=キーの配列を返す変数。  
@@ -100,16 +100,16 @@ dcItemの参照渡し版。
 取得できた場合は1を返し、refValueに値を返します。  
 できなかった場合は0を返します。  
 
-* dcRemove struct dict, str _key  
+* dcRemove struct dict, str key  
 要素を削除します。  
 
 * dcClear struct dict  
 登録される要素を全て削除します。  
 
-* int isContains=dcContainsKey(struct dict, str _key)  
+* int isContains=dcContainsKey(struct dict, str key)  
 キーが存在するか確かめます。  
 
-* int isContains=dcContainsValue(struct dict, str _value)  
+* int isContains=dcContainsValue(struct dict, str value)  
 値が存在するか確かめます(線形探索)。  
 
 * dcFinalize struct dict  
