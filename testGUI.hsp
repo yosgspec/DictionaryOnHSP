@@ -1,3 +1,9 @@
+;--------------------------------------------------
+; 【連想配列】Dictionaryモジュール
+; サンプルファイル
+; https://github.com/yosgspec/DictionaryOnHSP
+;--------------------------------------------------
+
 #cmpopt varinit 1
 #include "Dictionary.as"
 

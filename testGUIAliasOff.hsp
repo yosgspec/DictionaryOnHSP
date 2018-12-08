@@ -1,3 +1,9 @@
+;--------------------------------------------------
+; 【連想配列】Dictionaryモジュール
+; サンプルファイル(エイリアス無効化)
+; https://github.com/yosgspec/DictionaryOnHSP
+;--------------------------------------------------
+
 #cmpopt varinit 1
 #define DictionaryAliasOff
 #include "Dictionary.as"

@@ -1,0 +1,165 @@
+#cmpopt varinit 1
+#include "shell32.as"
+#include "kernel32.as"
+
+#module Program
+	#deffunc newForm
+		screen 0,400,150,0
+		title "Dictionaryモジュールインストーラー"
+		objmode 2
+
+		color $33,$99,$FF
+		boxf 0,0,399,149
+
+		pos 10,10
+		color $00,$00,$99
+		mes "モジュールとヘルプファイルをインストールします。"
+	
+		font "ＭＳ ゴシック",18,0
+		pos 10,40
+		dirPath=""
+		input dirPath,320,30
+		dirPath_id=stat
+
+		objsize 50,30
+		pos 340,40
+		button gosub "参照",*dirSelect
+	
+		objsize 180,50
+		pos 10,90
+		button gosub "インストール",*install
+	
+		pos 210,90
+		button gosub "アンインストール",*uninstall
+	return
+
+	#define githubURL "https://github.com/yosgspec/DictionaryOnHSP"
+	#define selectMsg "HSP3のインストールされているフォルダを選択してください。"
+	#define notHSP3Directory "フォルダ選択が間違っています。\n"
+
+	#deffunc main
+		asFile="Dictionary.as"
+		hsFiles="Dictionary.hs","testGUI.hsp","testGUIAliasOff.hsp","testZatsu.hsp"
+		hsDir="\\doclib\\Dictionary\\"
+		newForm
+		objprm dirPath_id,"C:\\hsp35"
+	return
+
+	#deffunc installCheck int isMkDir,var refAsExist,array refHsExists,str asAddress,array hsAddress
+		sdim tmp
+		dirlist tmp,dirPath+"\\common",5
+		if 1!stat: return 1
+		dirlist tmp,dirPath+"\\doclib",5
+		if 1!stat: return 1
+
+		exist asAddress
+		refAsExist=-1<strsize
+
+		dirlist tmp,dirPath+"\\doclib\\Dictionary",5
+		if 1!stat {
+			mkdir dirPath+"\\doclib\\Dictionary"
+			refHsExists=0,0,0,0
+		}
+		else {
+			foreach refHsExists
+				exist hsAddress(cnt)
+				refHsExists(cnt)=-1<strsize
+			loop
+		}
+	return 0
+
+	#deffunc installFile int isExist,str file,str installAddress
+		dim tmp
+		if isExist {
+			notesel tmp
+			noteload installAddress
+			if -1<notefind(githubURL,2) {
+				dialog installAddress+"を上書きしますか?",2
+				if 1!stat: return 0
+			}
+			else {
+				dialog "既に同名のファイルが存在しています。\n"+installAddress(cnt)
+				return 1
+			}
+		}
+		bcopy file,installAddress
+	return 0
+
+	;フォルダ選択ダイアログ
+	;http://hsp.tv/play/pforum.php?mode=pastwch&num=58563
+	*dirSelect
+		dim bi,8
+		sdim sztmp,$206
+		ttl=selectMsg
+		bi=0,0,varptr(sztmp),varptr(ttl),1,0,0,0
+		SHBrowseForFolder varptr(bi)
+		idl=stat
+		SHGetPathFromIDList idl,varptr(sztmp)
+		if stat: objprm dirPath_id,sztmp
+	return
+
+	*install
+		asInstallAddress=dirPath+"\\common\\Dictionary.as"
+		sdim hsInstallAddress,length(hsFiles)
+		foreach hsFiles
+			hsInstallAddress(cnt)=dirPath+hsDir+hsFiles(cnt)
+		loop
+		dim asExist
+		dim hsExists,length(hsFiles)
+		installCheck 1,asExist,hsExists,asInstallAddress,hsInstallAddress
+		if stat {
+			dialog notHSP3Directory+selectMsg
+			return
+		}
+
+		installFile asExist,asFile,asInstallAddress
+		if stat: return
+		foreach hsFiles
+			installFile hsExists(cnt),hsFiles(cnt),hsInstallAddress(cnt)
+			if stat: return
+		loop
+		
+		dialog "【連想配列】Dictionaryモジュールのインストールが完了しました。"
+	return
+
+	*uninstall
+		asInstallAddress=dirPath+"\\common\\Dictionary.as"
+		sdim hsInstallAddress,length(hsFiles)
+		foreach hsFiles
+			hsInstallAddress(cnt)=dirPath+hsDir+hsFiles(cnt)
+		loop
+		dim asExist
+		dim hsExists,length(hsFiles)
+		installCheck 1,asExist,hsExists,asInstallAddress,hsInstallAddress
+		if stat {
+			dialog notHSP3Directory+selectMsg
+			return
+		}
+
+		if 1!(asExist | hsExists(0) | hsExists(1) | hsExists(2) | hsExists(3)) {
+			dialog "モジュールが存在しません。"
+			return
+		}
+
+		dim tmp
+		notesel tmp
+		if asExist {
+			noteload asInstallAddress
+			if -1<notefind(githubURL,2) {
+				delete asInstallAddress
+			}
+		}
+		foreach hsFiles
+			if hsExists(cnt) {
+				noteload hsInstallAddress(cnt)
+				if -1<notefind(githubURL,2) {
+					delete hsInstallAddress(cnt)
+				}
+			}
+		loop
+
+		RemoveDirectory dirPath+hsDir
+		dialog "【連想配列】Dictionaryモジュールの削除が完了しました。"
+	return
+#global
+main

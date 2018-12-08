@@ -1,3 +1,9 @@
+;--------------------------------------------------
+; 【連想配列】Dictionaryモジュール
+;                                   by.YOS G-spec
+; https://github.com/yosgspec/DictionaryOnHSP
+;--------------------------------------------------
+
 #ifndef Dictionary
 ;公開するAPIのエイリアス
 #ifndef DictionaryAliasOff
@@ -176,7 +182,7 @@
 			}
 			else:if keyList(index)=_key {
 				gosub existFn
-				break
+				breakset_exist
 			}
 			hashKey=(hashKey+tableSize-1)\tableSize
 		loop
@@ -184,7 +190,7 @@
 	#define searchHash(%1,%2,%3) %tsearchHash %i=%3:%i=%2:__searchHash thismod,%1,%o,%o
 
 	;キーが存在しない時の処理
-	*set_Exist
+	*set_exist
 		isContains=1
 	return
 
@@ -195,7 +201,7 @@
 		castValue _value,value
 		if vartype(value)=typeStr: if value=null: return 2
 		escNullString _key,key
-		searchHash key,*nullFunc,*set_Exist
+		searchHash key,*nullFunc,*set_exist
 
 		if isAdd & isContains: return 1
 		if 1!isContains {
@@ -225,16 +231,16 @@
 			searchHash key,*nullFunc,*nullFunc :\
 			if 0<=index {valueList(index)=valueList(index)%1addValue}\
 			else {return 1}
-		if sign="+" | sign="+=" {reSetSign +}
-		else:if sign="-" | sign="-=" {reSetSign -}
-		else:if sign="*" | sign="*=" {reSetSign *}
-		else:if sign="/" | sign="/=" {reSetSign /}
-		else:if sign="\\" | sign="\\=" {reSetSign \}
-		else:if sign="|" | sign="|=" {reSetSign |}
-		else:if sign="&" | sign="&=" {reSetSign &}
-		else:if sign="^" | sign="^=" {reSetSign ^}
-		else:if sign="<<" | sign="<<=" {reSetSign <<}
-		else:if sign=">>" | sign=">>=" {reSetSign >>}
+		if sign="+" {reSetSign +}
+		else:if sign="-" {reSetSign -}
+		else:if sign="*" {reSetSign *}
+		else:if sign="/" {reSetSign /}
+		else:if sign="\\" {reSetSign \}
+		else:if sign="|" {reSetSign |}
+		else:if sign="&" {reSetSign &}
+		else:if sign="^" {reSetSign ^}
+		else:if sign="<<" {reSetSign <<}
+		else:if sign=">>" {reSetSign >>}
 		else {return 1}
 	return 0
 
@@ -276,6 +282,10 @@
 		thisCount--
 		table(hashKey)=0
 	return
+	;テーブルに保持するインデックス値を詰める
+	*table_dec
+		table(hashKey)--
+	return
 
 	;値の削除
 	#modfunc local remove str _key
@@ -283,11 +293,14 @@
 		searchHash key,*item_notExist,*remove_exist
 
 		if vartype(value)=typeStr: if value=null: return 1
+
 		repeat thisCount-index,index
 			keyList(cnt)=keyList(cnt+1)
 			valueList(cnt)=valueList(cnt+1)
+			escNullString keyList(cnt),key
+			searchHash key,*nullFunc,*table_dec
 		loop
-	return 0 
+	return 0
 
 	;辞書のクリア
 	#modfunc local clear
