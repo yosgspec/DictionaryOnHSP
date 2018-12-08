@@ -9,7 +9,7 @@ Dictionaryモジュールの本体です。
 Dictionaryモジュールのヘルプファイルです。  
 参照: http://www.onionsoft.net/hsp/v35/doclib/HSP%20Document%20Library/hdl_usage.htm
 
-* setupDictionary.exe
+* setupDictionary.exe  
 HSP3フォルダ内にモジュールをインストール/アンインストールします。
 インストール後はヘルプファイルをHSP Document Libraryにより閲覧することができます。
 モジュールに関してもパス指定なしでインクルードが可能です。
@@ -24,7 +24,7 @@ testGUI.hspをコンパイルしたものです。
 * testGUI.hsp  
 DictionayPreview.exeのソースファイルです。  
 
-* testGUIAliasOff.hsp
+* testGUIAliasOff.hsp  
 testGUI.hspにDictionaryAliasOffを適用したサンプルファイルです。
 
 * testZatsu.hsp  
