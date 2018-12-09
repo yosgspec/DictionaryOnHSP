@@ -1,11 +1,11 @@
 ;--------------------------------------------------
-; y˜A‘z”z—ñzDictionaryƒ‚ƒWƒ…[ƒ‹
+; ã€é€£æƒ³é…åˆ—ã€‘Dictionaryãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
 ;                                   by.YOS G-spec
 ; https://github.com/yosgspec/DictionaryOnHSP
 ;--------------------------------------------------
 
 #ifndef Dictionary
-;ŒöŠJ‚·‚éAPI‚ÌƒGƒCƒŠƒAƒX
+;å…¬é–‹ã™ã‚‹APIã®ã‚¨ã‚¤ãƒªã‚¢ã‚¹
 #ifndef DictionaryAliasOff
 	#define global dcGetHashCode getHashCode@Dictionary
 	#define global dcNull null@Dictionary
@@ -33,49 +33,49 @@
 	#define global dcFinalize finalize@Dictionary
 #endif
 
-;Dictionaryƒ‚ƒWƒ…[ƒ‹
+;Dictionaryãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
 #module Dictionary table,tableSize,tableSize80,keyList,valueList,thisCount,type
-	;ƒnƒbƒVƒ…ŠÖ”
+	;ãƒãƒƒã‚·ãƒ¥é–¢æ•°
 	#define getHashCode fnvHash32@@fnvHash32
 
 	;null
 	#define null "__$dcNull__"
 	#const typeStr 2
 	
-	;‹ó•¶š—ñƒGƒXƒP[ƒv
+	;ç©ºæ–‡å­—åˆ—ã‚¨ã‚¹ã‚±ãƒ¼ãƒ—
 	#define nullString "__$nullString__"
 	#define escNullString(%1,%2) if %1="": %2=nullString: else: %2=%1
 	#define unEscNullString(%1,%2) if %1=nullString: %2="": else: %2=%1
 
-	;‰üs•¶š
+	;æ”¹è¡Œæ–‡å­—
 	#const charCr $0D
 	#const charLf $0A
 
-	;—v‘f”
+	;è¦ç´ æ•°
 	#modcfunc local count
 		return thisCount
 
-	;«‘Œ^
+	;è¾æ›¸å‹
 	#modcfunc local getType
 		return type
 
-	;ƒnƒbƒVƒ…ƒe[ƒuƒ‹ƒTƒCƒY
+	;ãƒãƒƒã‚·ãƒ¥ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µã‚¤ã‚º
 	#modcfunc local getTableSize
 		return tableSize
 
-	;Dictionary—pforeachƒL[ƒ[ƒh
+	;Dictionaryç”¨foreachã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰
 	#define global foreach@Dictionary(%1) repeat count@Dictionary(%1)
 
-	;ƒCƒ“ƒfƒbƒNƒX‚©‚ç‚ÌƒL[æ“¾
+	;ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‹ã‚‰ã®ã‚­ãƒ¼å–å¾—
 	#modcfunc local keys int _index
 		unEscNullString keyList(_index),key
 		return key
 
-	;ƒCƒ“ƒfƒbƒNƒX‚©‚ç‚Ì’læ“¾
+	;ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‹ã‚‰ã®å€¤å–å¾—
 	#modcfunc local values int _index
 		return valueList(_index)
 
-	;ƒL[”z—ñ‚Ìæ“¾
+	;ã‚­ãƒ¼é…åˆ—ã®å–å¾—
 	#modfunc local refKeys array refKeyList
 		sdim refKeyList,,thisCount
 		repeat thisCount
@@ -84,13 +84,13 @@
 		loop
 	return
 
-	;’l”z—ñ‚Ìæ“¾
+	;å€¤é…åˆ—ã®å–å¾—
 	#modfunc local refValues array refValueList
 		dimtype refValueList,type,thisCount
 		repeat thisCount: refValueList(cnt)=valueList(cnt): loop
 	return
 
-	;ƒL[A’l”z—ñ‚Ìæ“¾
+	;ã‚­ãƒ¼ã€å€¤é…åˆ—ã®å–å¾—
 	#modfunc local refKeysAndValues array refKeyList,array refValueList
 		sdim refKeyList,,thisCount
 		dimtype refValueList,type,thisCount
@@ -101,7 +101,7 @@
 		loop
 	return
 
-	;”z—ñ‚Ì˜AŒ‹
+	;é…åˆ—ã®é€£çµ
 	#define ctype joinArray(%1,%2=",") __joinArray@Dictionary(%1,%2)
 	#defcfunc local __joinArray array ary,str sep
 		s=""
@@ -111,7 +111,7 @@
 		loop
 	return s
 
-	;Dictionary‚Ì˜AŒ‹
+	;Dictionaryã®é€£çµ
 	#define ctype joinDict(%1,%2=":",%3="\\n") __joinDict@Dictionary(%1,%2,%3)
 	#modcfunc local __joinDict str keySep,str itemSep
 		s=""
@@ -121,7 +121,7 @@
 		loop
 	return s
 
-	;ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	;ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	#define new(%1,%2="str",%3=":",%4=",",%5=null@Dictionary) %tDictionary dimtype %1,5: newmod %1,Dictionary,%2,%3,%4,%5
 	#define news(%1,%2="str",%3=":",%4=",",%5=null@Dictionary) newmod %1,Dictionary,%2,%3,%4,%5
 	#modinit str _type,str keySep,str itemSep,str _dict
@@ -132,13 +132,13 @@
 		dict=_dict
 		dictLen=0
 		if dict!=null {
-			;I’[‚Ì‰üsœ‹
+			;çµ‚ç«¯ã®æ”¹è¡Œé™¤å»
 			dict=strtrim(dict,2,charLf)
 			dict=strtrim(dict,2,charCr)
-			;—v‘f‚Ì•ªŠ„
+			;è¦ç´ ã®åˆ†å‰²
 			split dict,itemSep,dict
 			dictLen=length(dict)
-			;ƒnƒbƒVƒ…ƒe[ƒuƒ‹‚ÌŠg’£
+			;ãƒãƒƒã‚·ãƒ¥ãƒ†ãƒ¼ãƒ–ãƒ«ã®æ‹¡å¼µ
 			repeat: if dictLen<tableSize: break: else: tableSize*=2: loop
 		}
 
@@ -149,7 +149,7 @@
 		dimtype valueList,type,dictLen
 
 		if dict=null: return
-		;‰Šú’l‚Ìİ’è
+		;åˆæœŸå€¤ã®è¨­å®š
 		sdim dictKey
 		sdim dictValue
 		foreach dict
@@ -160,7 +160,7 @@
 		loop
 	return
 
-	;«‘Œ^‚ÉƒLƒƒƒXƒg
+	;è¾æ›¸å‹ã«ã‚­ãƒ£ã‚¹ãƒˆ
 	#define castValue(%1,%2) \
 		if type=2 {%2=str(%1)} \
 		else:if type=3 {%2=double(%1)} \
@@ -168,10 +168,10 @@
 		else:if type=vartype(%1) {%2=%1} \
 		else {%2=null@Dictionary}
 
-	;‹ó‚Ìƒ‰ƒxƒ‹Œ^–½—ß
+	;ç©ºã®ãƒ©ãƒ™ãƒ«å‹å‘½ä»¤
 	*nullFunc:return
 
-	;ƒnƒbƒVƒ…‚ÌŒŸõ
+	;ãƒãƒƒã‚·ãƒ¥ã®æ¤œç´¢
 	#modfunc local __searchHash str _key,var notExistFn,var existFn
 		hashKey=int(getHashCode(_key)\tableSize)
 		repeat
@@ -182,19 +182,19 @@
 			}
 			else:if keyList(index)=_key {
 				gosub existFn
-				breakset_exist
+				break
 			}
 			hashKey=(hashKey+tableSize-1)\tableSize
 		loop
 	return
 	#define searchHash(%1,%2,%3) %tsearchHash %i=%3:%i=%2:__searchHash thismod,%1,%o,%o
 
-	;ƒL[‚ª‘¶İ‚µ‚È‚¢‚Ìˆ—
+	;ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„æ™‚ã®å‡¦ç†
 	*set_exist
 		isContains=1
 	return
 
-	;’l‚Ì“o˜^
+	;å€¤ã®ç™»éŒ²
 	#define set(%1,%2,%3,%4=0) %tdcSet %i=%3 :__set@Dictionary %1,%2,%o,%4
 	#modfunc local __set str _key,var _value,int isAdd
 		isContains=0
@@ -220,10 +220,10 @@
 		}
 	return 0
 
-	;’l‚Ì’Ç‰Á
+	;å€¤ã®è¿½åŠ 
 	#define add(%1,%2,%3) set@Dictionary %1,%2,%3,1
 
-	;‘ã“ü‰‰Zq
+	;ä»£å…¥æ¼”ç®—å­
 	#define reSet(%1,%2,%3,%4) %tdcReSet %i=%4 :__ReSet@Dictionary %1,%2,%3,%o
 	#modfunc local __reSet str _key,str sign,var addValue
 		#define reSetSign(%1) \
@@ -244,17 +244,17 @@
 		else {return 1}
 	return 0
 
-	;ƒL[‚ª‘¶İ‚µ‚È‚¢‚Ìˆ—
+	;ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãªã„æ™‚ã®å‡¦ç†
 	*item_notExist
 		value=null
 	return
 
-	;ƒL[‚ª‘¶İ‚·‚é‚Ìˆ—
+	;ã‚­ãƒ¼ãŒå­˜åœ¨ã™ã‚‹æ™‚ã®å‡¦ç†
 	*item_exist
 		value=valueList(index)
 	return
 
-	;’l‚Ìæ“¾
+	;å€¤ã®å–å¾—
 	#modcfunc local item str _key
 		escNullString _key,key
 		searchHash key,*item_notExist,*item_exist
@@ -265,7 +265,7 @@
 		refValue=value
 	return
 
-	;’l‚Ìæ“¾‚Ìs
+	;å€¤ã®å–å¾—ã®è©¦è¡Œ
 	#modcfunc local tryGetValue str _key,var refValue
 		refItem thismod,_key,value
 		if vartype(value)=typeStr: if value=null {
@@ -276,18 +276,18 @@
 			return 1
 		}
 
-	;ƒL[‚ª‘¶İ‚·‚é‚Ìˆ—
+	;ã‚­ãƒ¼ãŒå­˜åœ¨ã™ã‚‹æ™‚ã®å‡¦ç†
 	*remove_exist
 		value=valueList(index)
 		thisCount--
 		table(hashKey)=0
 	return
-	;ƒe[ƒuƒ‹‚É•Û‚·‚éƒCƒ“ƒfƒbƒNƒX’l‚ğ‹l‚ß‚é
+	;ãƒ†ãƒ¼ãƒ–ãƒ«ã«ä¿æŒã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å€¤ã‚’è©°ã‚ã‚‹
 	*table_dec
 		table(hashKey)--
 	return
 
-	;’l‚Ìíœ
+	;å€¤ã®å‰Šé™¤
 	#modfunc local remove str _key
 		escNullString _key,key
 		searchHash key,*item_notExist,*remove_exist
@@ -302,7 +302,7 @@
 		loop
 	return 0
 
-	;«‘‚ÌƒNƒŠƒA
+	;è¾æ›¸ã®ã‚¯ãƒªã‚¢
 	#modfunc local clear
 		thisCount=0
 		isRehash=0
@@ -313,14 +313,14 @@
 		dimtype valueList,type,1
 	return
 
-	;ƒL[‚Ì—L–³
+	;ã‚­ãƒ¼ã®æœ‰ç„¡
 	#modcfunc local containsKey str _key
 		isContains=0
 		escNullString _key,key
 		searchHash key,*nullFunc,*set_exist
 	return isContains
 
-	;’l‚Ì—L–³
+	;å€¤ã®æœ‰ç„¡
 	#modcfunc local containsValue str _value
 		isContains=0
 		repeat thisCount
@@ -332,7 +332,7 @@
 		return isContains
 	return
 
-	;ƒnƒbƒVƒ…‚ÌÄ”z’u
+	;ãƒãƒƒã‚·ãƒ¥ã®å†é…ç½®
 	#modfunc local reHash int tableSizeNext
 		_itemCount=thisCount
 		tableSize=tableSizeNext
@@ -346,11 +346,11 @@
 		isRehash=0
 	return
 
-	;ƒfƒXƒgƒ‰ƒNƒ^
+	;ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	#define finalize(%1) delmod %1
 #global
 
-;ƒnƒbƒVƒ…ŠÖ”(FNV 32bit)
+;ãƒãƒƒã‚·ãƒ¥é–¢æ•°(FNV 32bit)
 #module @fnvHash32
 	#defcfunc local fnvHash32 str _s
 		s=_s
