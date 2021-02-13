@@ -1,7 +1,6 @@
 # Dictionaryモジュール
 HSP製連想配列モジュールとそのサンプルです。  
-[github](https://github.com/yosgspec/DictionaryOnHSP)  
-[SoupSeed](http://dev.onionsoft.net/seed/info.ax?id=1558)
+[【github】](https://github.com/yosgspec/DictionaryOnHSP) [【SoupSeed】](http://dev.onionsoft.net/seed/info.ax?id=1558)
 
 * Dictionary.as  
 Dictionaryモジュールの本体です。  
